@@ -42,9 +42,9 @@ public class MywebApplication {
             Role adminRole = new Role();
             Role userRole = new Role();
 
-            adminRole.setRoleName("Admin");
+            adminRole.setRoleName("ROLE_ADMIN");
             adminRole.setCreateDate(new Date());
-            userRole.setRoleName("User");
+            userRole.setRoleName("ROLE_USER");
             userRole.setCreateDate(new Date());
 
             roleRepository.save(adminRole);

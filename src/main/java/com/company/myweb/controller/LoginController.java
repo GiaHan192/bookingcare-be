@@ -1,6 +1,7 @@
 package com.company.myweb.controller;
 
 import com.company.myweb.dto.UserDTO;
+import com.company.myweb.entity.common.ApiResponse;
 import com.company.myweb.payload.ResponseData;
 import com.company.myweb.payload.request.SignInRequest;
 import com.company.myweb.payload.request.SignUpRequest;
@@ -30,30 +31,30 @@ public class LoginController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody SignInRequest request) {
-        ResponseData responseData = new ResponseData();
-
-
+    public ResponseEntity<ApiResponse<String>> signin(@RequestBody SignInRequest request) {
         if (loginServiceImp.checkLogin(request.getUserName(), request.getPassword())) {
             UserDTO userDto = loginServiceImp.getUserByUserName(request.getUserName());
             if (userDto != null) {
                 String token = jwtUtilsHelper.generateToken(userDto);
-                responseData.setData(token);
+                return ResponseEntity.ok(ApiResponse.success(token));
             }
-
         } else {
-            responseData.setData("");
-            responseData.setSuccess(false);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResponse.failed("Đăng nhập thất bại"));
         }
-
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        return null;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<ApiResponse<String>> signup(@RequestBody SignUpRequest signUpRequest) {
         ResponseData responseData = new ResponseData();
-        responseData.setData(loginServiceImp.addUser(signUpRequest));
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        boolean result = loginServiceImp.addUser(signUpRequest);
+        if (result) {
+            return ResponseEntity.ok(ApiResponse.success("Tạo tài khoản thành công"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.failed("Tạo tài khoản thất bại"));
+        }
     }
 
 }
