@@ -1,0 +1,22 @@
+spring:
+    datasource:
+        url: jdbc:mysql://127.0.0.1:3307/booking_health_care
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+        servlet:
+            multipart:
+                max-file-size: 10MB
+jwt:
+    privateKey: l0rcImvvHNZMX9As9i5ZS8qkWux4DaJiPDNpTlmTPbc=
+
+fileUpload:
+    rootPath: C:\Users\NC\Desktop\upLoads
+#server:
+#    port: 8081
