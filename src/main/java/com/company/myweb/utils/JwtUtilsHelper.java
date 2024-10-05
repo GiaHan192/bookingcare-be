@@ -33,7 +33,7 @@ public class JwtUtilsHelper {
         return Jwts.builder()
                 .claims(claims)
                 .subject(users.getUserName())
-                .signWith(SignatureAlgorithm.ES512, key)
+                .signWith(key)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expirationNumber))
                 .compact();

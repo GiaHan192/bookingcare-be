@@ -2,6 +2,7 @@ package com.company.myweb.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
 
@@ -21,6 +22,7 @@ public class Users {
     private String fullName;
 
     @Column(name = "creat_date")
+    @CreatedDate
     private Date createDate;
 
     @ManyToOne

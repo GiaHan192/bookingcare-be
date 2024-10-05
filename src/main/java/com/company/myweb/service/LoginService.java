@@ -4,6 +4,7 @@ import com.company.myweb.dto.UserDTO;
 import com.company.myweb.entity.Role;
 import com.company.myweb.entity.Users;
 import com.company.myweb.payload.request.SignUpRequest;
+import com.company.myweb.repository.RoleRepository;
 import com.company.myweb.repository.UserRepository;
 import com.company.myweb.service.imp.LoginServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LoginService implements LoginServiceImp {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public LoginService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public LoginService(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -46,13 +50,14 @@ public class LoginService implements LoginServiceImp {
 
     @Override
     public boolean addUser(SignUpRequest signUpRequest) {
-        Role roles = new Role();
-        roles.setId(signUpRequest.getRoleId());
+        Optional<Role> roleByRoleName = roleRepository.findRoleByRoleName(signUpRequest.getRoleName());
+        Role role = roleByRoleName.get();
+
         Users user = new Users();
-        user.setFullName(signUpRequest.getFullname());
+        user.setFullName(signUpRequest.getFullName());
         user.setUserName(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
-        user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        user.setRoles(role);
         try {
             userRepository.save(user);
             return true;
@@ -70,6 +75,7 @@ public class LoginService implements LoginServiceImp {
             userDTO.setUserName(user.getUserName());
             userDTO.setPassword(user.getPassword());
             userDTO.setFullName(user.getFullName());
+            userDTO.setRoles(user.getRoles());
             return userDTO;
         } else {
             return null;
