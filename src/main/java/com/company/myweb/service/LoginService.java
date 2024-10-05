@@ -1,7 +1,7 @@
 package com.company.myweb.service;
 
 import com.company.myweb.dto.UserDTO;
-import com.company.myweb.entity.Roles;
+import com.company.myweb.entity.Role;
 import com.company.myweb.entity.Users;
 import com.company.myweb.payload.request.SignUpRequest;
 import com.company.myweb.repository.UserRepository;
@@ -12,52 +12,67 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class LoginService implements LoginServiceImp {
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    UserRepository userRepository;
-    @Override
-    public List<UserDTO> getAllUser(){
-            List<Users> listUser = userRepository.findAll();
-            List<UserDTO> userDTOList = new ArrayList<>();
-            for (Users users: listUser) {
-                UserDTO userDTO = new UserDTO();
-                userDTO.setId(users.getId());
-                userDTO.setUserName(users.getUserName());
-                userDTO.setPassword(users.getPassword());
-                userDTO.setFullname(users.getFullName());
+    private final UserRepository userRepository;
 
-                userDTOList.add(userDTO);
-            }
-            return userDTOList;
+    public LoginService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public boolean checkLogin(String username,String password){
+    public List<UserDTO> getAllUser() {
+        List<Users> listUser = userRepository.findAll();
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for (Users users : listUser) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(users.getId());
+            userDTO.setUserName(users.getUserName());
+            userDTO.setFullName(users.getFullName());
+            userDTOList.add(userDTO);
+        }
+        return userDTOList;
+    }
 
+    @Override
+    public boolean checkLogin(String username, String password) {
         Users user = userRepository.findByUserName(username);
-        return passwordEncoder.matches(password,user.getPassword());
+        return passwordEncoder.matches(password, user.getPassword());
     }
+
     @Override
-    public boolean addUser(SignUpRequest signUpRequest){
-        Roles roles = new Roles();
+    public boolean addUser(SignUpRequest signUpRequest) {
+        Role roles = new Role();
         roles.setId(signUpRequest.getRoleId());
-
-        Users users = new Users();
-        users.setFullName(signUpRequest.getFullname());
-        users.setUserName(signUpRequest.getEmail());
-        users.setPassword(signUpRequest.getPassword());
-        users.setRoles(roles);
-
+        Users user = new Users();
+        user.setFullName(signUpRequest.getFullname());
+        user.setUserName(signUpRequest.getEmail());
+        user.setPassword(signUpRequest.getPassword());
+        user.setRoles(roles);
         try {
-            userRepository.save(users);
+            userRepository.save(user);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
+    }
 
+    @Override
+    public UserDTO getUserByUserName(String userName) {
+        Users user = this.userRepository.findByUserName(userName);
+        if (user != null) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setUserName(user.getUserName());
+            userDTO.setPassword(user.getPassword());
+            userDTO.setFullName(user.getFullName());
+            return userDTO;
+        } else {
+            return null;
+        }
     }
 }

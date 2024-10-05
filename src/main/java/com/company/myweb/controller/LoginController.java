@@ -1,6 +1,8 @@
 package com.company.myweb.controller;
 
+import com.company.myweb.dto.UserDTO;
 import com.company.myweb.payload.ResponseData;
+import com.company.myweb.payload.request.SignInRequest;
 import com.company.myweb.payload.request.SignUpRequest;
 import com.company.myweb.service.imp.LoginServiceImp;
 import com.company.myweb.utils.JwtUtilsHelper;
@@ -28,13 +30,17 @@ public class LoginController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<?> signin(@RequestBody SignInRequest request) {
         ResponseData responseData = new ResponseData();
 
 
-        if (loginServiceImp.checkLogin(username, password)) {
-            String token = jwtUtilsHelper.generateToken(username);
-            responseData.setData(token);
+        if (loginServiceImp.checkLogin(request.getUserName(), request.getPassword())) {
+            UserDTO userDto = loginServiceImp.getUserByUserName(request.getUserName());
+            if (userDto != null) {
+                String token = jwtUtilsHelper.generateToken(userDto);
+                responseData.setData(token);
+            }
+
         } else {
             responseData.setData("");
             responseData.setSuccess(false);

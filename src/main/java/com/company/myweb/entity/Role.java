@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity(name = "roles")
 @Data
-public class Roles {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

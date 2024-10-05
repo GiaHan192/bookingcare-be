@@ -12,4 +12,5 @@ public interface LoginServiceImp {
 
     boolean addUser(SignUpRequest signUpRequest);
 
+    UserDTO getUserByUserName(String userName);
 }
