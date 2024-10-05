@@ -28,7 +28,7 @@ public class LoginService implements LoginServiceImp {
                 userDTO.setId(users.getId());
                 userDTO.setUserName(users.getUserName());
                 userDTO.setPassword(users.getPassword());
-                userDTO.setFullname(users.getFullname());
+                userDTO.setFullname(users.getFullName());
 
                 userDTOList.add(userDTO);
             }
@@ -47,7 +47,7 @@ public class LoginService implements LoginServiceImp {
         roles.setId(signUpRequest.getRoleId());
 
         Users users = new Users();
-        users.setFullname(signUpRequest.getFullname());
+        users.setFullName(signUpRequest.getFullname());
         users.setUserName(signUpRequest.getEmail());
         users.setPassword(signUpRequest.getPassword());
         users.setRoles(roles);

@@ -17,31 +17,34 @@ import javax.crypto.SecretKey;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 public class LoginController {
-    @Autowired
-    LoginServiceImp loginServiceImp;
-    @Autowired
-    JwtUtilsHelper jwtUtilsHelper;
+    private final LoginServiceImp loginServiceImp;
+    private final JwtUtilsHelper jwtUtilsHelper;
+
+    public LoginController(LoginServiceImp loginServiceImp, JwtUtilsHelper jwtUtilsHelper) {
+        this.loginServiceImp = loginServiceImp;
+        this.jwtUtilsHelper = jwtUtilsHelper;
+    }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestParam String username,@RequestParam String password){
+    public ResponseEntity<?> signin(@RequestParam String username, @RequestParam String password) {
         ResponseData responseData = new ResponseData();
 
 
-        if (loginServiceImp.checkLogin(username,password)){
+        if (loginServiceImp.checkLogin(username, password)) {
             String token = jwtUtilsHelper.generateToken(username);
             responseData.setData(token);
-        }else {
+        } else {
             responseData.setData("");
             responseData.setSuccess(false);
         }
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);
-        }
+    }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<?> signup(@RequestBody SignUpRequest signUpRequest) {
         ResponseData responseData = new ResponseData();
         responseData.setData(loginServiceImp.addUser(signUpRequest));
         return new ResponseEntity<>(responseData, HttpStatus.OK);

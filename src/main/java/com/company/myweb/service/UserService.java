@@ -24,7 +24,7 @@ public class UserService implements UserServiceImp {
             userDTO.setId(users.getId());
             userDTO.setUserName(users.getUserName());
             userDTO.setPassword(users.getPassword());
-            userDTO.setFullname(users.getFullname());
+            userDTO.setFullname(users.getFullName());
 
             userDTOList.add(userDTO);
         }

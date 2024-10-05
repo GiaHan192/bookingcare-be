@@ -1,12 +1,14 @@
 package com.company.myweb.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.Set;
 
 
 @Entity(name = "roles")
+@Data
 public class Roles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,36 +22,4 @@ public class Roles {
 
     @OneToMany(mappedBy = "roles")
     private Set<Users> listUser;
-
-    public Set<Users> getListUser() {
-        return listUser;
-    }
-
-    public void setListUser(Set<Users> listUser) {
-        this.listUser = listUser;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
 }
