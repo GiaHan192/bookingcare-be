@@ -1,8 +1,7 @@
 package com.company.myweb.controller;
 
 import com.company.myweb.dto.QuestionDTO;
-import com.company.myweb.entity.Question;
-import com.company.myweb.service.imp.QuestionServiceImp;
+import com.company.myweb.service.interfaces.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ import java.util.List;
 @RequestMapping("/questions")
 public class QuestionController {
     @Autowired
-    private QuestionServiceImp questionServiceImp;
+    private IQuestionService questionServiceImp;
 
     @GetMapping("")
     public ResponseEntity<List<QuestionDTO>> getAllQuestions(){

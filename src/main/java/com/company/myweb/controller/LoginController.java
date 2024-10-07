@@ -5,27 +5,21 @@ import com.company.myweb.entity.common.ApiResponse;
 import com.company.myweb.payload.ResponseData;
 import com.company.myweb.payload.request.SignInRequest;
 import com.company.myweb.payload.request.SignUpRequest;
-import com.company.myweb.service.imp.LoginServiceImp;
+import com.company.myweb.service.interfaces.ILoginService;
 import com.company.myweb.utils.JwtUtilsHelper;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Encoders;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.crypto.SecretKey;
 
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
-    private final LoginServiceImp loginServiceImp;
+    private final ILoginService loginServiceImp;
     private final JwtUtilsHelper jwtUtilsHelper;
 
-    public LoginController(LoginServiceImp loginServiceImp, JwtUtilsHelper jwtUtilsHelper) {
+    public LoginController(ILoginService loginServiceImp, JwtUtilsHelper jwtUtilsHelper) {
         this.loginServiceImp = loginServiceImp;
         this.jwtUtilsHelper = jwtUtilsHelper;
     }

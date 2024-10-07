@@ -1,9 +1,9 @@
-package com.company.myweb.service.imp;
+package com.company.myweb.service.interfaces;
 
 import com.company.myweb.dto.UserDTO;
 
 import java.util.List;
 
-public interface UserServiceImp {
+public interface IUserService {
     List<UserDTO> getAllUser();
 }

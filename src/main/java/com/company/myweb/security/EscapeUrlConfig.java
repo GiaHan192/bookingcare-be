@@ -14,6 +14,7 @@ public class EscapeUrlConfig {
     static {
         escapeUrls.add(new EscapeUrl("/auth/signin", HttpMethod.POST));
         escapeUrls.add(new EscapeUrl("/api/posts/**", HttpMethod.GET));
+        escapeUrls.add(new EscapeUrl("/api/doctors/**", HttpMethod.GET));
         escapeUrls.add(new EscapeUrl("/auth/signup", HttpMethod.POST));
         escapeUrls.add(new EscapeUrl("api-docs/swagger-config", HttpMethod.GET));
         escapeUrls.add(new EscapeUrl("/swagger-ui/**", HttpMethod.GET));

@@ -3,7 +3,7 @@ package com.company.myweb.service;
 import com.company.myweb.dto.UserDTO;
 import com.company.myweb.entity.Users;
 import com.company.myweb.repository.UserRepository;
-import com.company.myweb.service.imp.UserServiceImp;
+import com.company.myweb.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserService implements UserServiceImp {
+public class UserService implements IUserService {
 
     @Autowired
     UserRepository userRepository;

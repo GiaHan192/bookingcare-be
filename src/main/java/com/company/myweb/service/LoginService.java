@@ -7,19 +7,17 @@ import com.company.myweb.entity.Users;
 import com.company.myweb.payload.request.SignUpRequest;
 import com.company.myweb.repository.RoleRepository;
 import com.company.myweb.repository.UserRepository;
-import com.company.myweb.service.imp.LoginServiceImp;
+import com.company.myweb.service.interfaces.ILoginService;
 import com.company.myweb.utils.ObjectUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class LoginService implements LoginServiceImp {
+public class LoginService implements ILoginService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;

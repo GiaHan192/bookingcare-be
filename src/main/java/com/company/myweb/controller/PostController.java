@@ -4,22 +4,20 @@ import com.company.myweb.dto.PostDTO;
 import com.company.myweb.entity.common.ApiPage;
 import com.company.myweb.entity.common.ApiResponse;
 import com.company.myweb.payload.request.CreatePostRequest;
-import com.company.myweb.service.PostService;
+import com.company.myweb.service.interfaces.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
 
-    private final PostService postService;
+    private final IPostService postService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(IPostService postService) {
         this.postService = postService;
     }
 

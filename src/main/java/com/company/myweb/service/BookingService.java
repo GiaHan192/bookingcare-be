@@ -3,12 +3,12 @@ package com.company.myweb.service;
 import com.company.myweb.dto.BookingDTO;
 import com.company.myweb.entity.Booking;
 import com.company.myweb.repository.BookingRepository;
-import com.company.myweb.service.imp.BookingServiceImp;
+import com.company.myweb.service.interfaces.IBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BookingService implements BookingServiceImp {
+public class BookingService implements IBookingService {
 
     @Autowired
     private BookingRepository bookingRepository;
