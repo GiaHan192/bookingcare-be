@@ -69,12 +69,14 @@ public class MywebApplication {
             user.setPassword(passwordEncoder.encode("123456789@Ax")); // Encrypt the password
             user.setFullName("User A");
             user.setRoles(userRole);
+            user.setActivate(true);
             userRepository.save(user);
 
             User admin = new User();
             admin.setUserName("admin@gmail.com");
             admin.setPassword(passwordEncoder.encode("123456789@Ax"));
             admin.setFullName("Admin");
+            admin.setActivate(true);
             admin.setRoles(adminRole);
             userRepository.save(admin);
         }
