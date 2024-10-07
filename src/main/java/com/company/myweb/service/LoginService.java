@@ -1,5 +1,6 @@
 package com.company.myweb.service;
 
+import com.company.myweb.dto.RoleDTO;
 import com.company.myweb.dto.UserDTO;
 import com.company.myweb.entity.Role;
 import com.company.myweb.entity.Users;
@@ -7,12 +8,14 @@ import com.company.myweb.payload.request.SignUpRequest;
 import com.company.myweb.repository.RoleRepository;
 import com.company.myweb.repository.UserRepository;
 import com.company.myweb.service.imp.LoginServiceImp;
+import com.company.myweb.utils.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -75,7 +78,7 @@ public class LoginService implements LoginServiceImp {
             userDTO.setUserName(user.getUserName());
             userDTO.setPassword(user.getPassword());
             userDTO.setFullName(user.getFullName());
-            userDTO.setRoles(user.getRoles());
+            userDTO.setRoles(ObjectUtil.copyProperties(user.getRoles(), new RoleDTO(), RoleDTO.class, true));
             return userDTO;
         } else {
             return null;
