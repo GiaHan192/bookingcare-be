@@ -9,4 +9,5 @@ import java.util.List;
 public interface IUserService {
     ApiPage<UserDTO> getAllUser(String query, Pageable pageable);
 
+    Boolean editActivateState(Integer id, Boolean isActivate);
 }

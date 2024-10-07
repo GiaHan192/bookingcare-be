@@ -46,7 +46,9 @@ public class LoginService implements ILoginService {
     @Override
     public boolean checkLogin(String username, String password) {
         User user = userRepository.findByUserName(username);
-        return passwordEncoder.matches(password, user.getPassword());
+        boolean passwordMatch = passwordEncoder.matches(password, user.getPassword());
+        boolean activated = user.isActivate();
+        return passwordMatch && activated;
     }
 
     @Override

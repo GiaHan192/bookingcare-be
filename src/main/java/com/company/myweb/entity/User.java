@@ -12,13 +12,15 @@ import java.util.Date;
 import java.util.List;
 
 @Entity(name = "users")
+@Table(name = "users")
 @Data
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
 
-    public User(){
+    public User() {
 
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -39,6 +41,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role roles;
 
+    @Column(name = "is_activate")
+    private boolean isActivate;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -56,16 +61,16 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isActivate;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return isActivate;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActivate;
     }
 }
