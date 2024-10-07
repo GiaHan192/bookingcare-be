@@ -21,5 +21,5 @@ public class Role {
     private Date createDate;
 
     @OneToMany(mappedBy = "roles")
-    private Set<Users> listUser;
+    private Set<User> listUser;
 }

@@ -3,7 +3,7 @@ package com.company.myweb.service;
 import com.company.myweb.dto.RoleDTO;
 import com.company.myweb.dto.UserDTO;
 import com.company.myweb.entity.Role;
-import com.company.myweb.entity.Users;
+import com.company.myweb.entity.User;
 import com.company.myweb.payload.request.SignUpRequest;
 import com.company.myweb.repository.RoleRepository;
 import com.company.myweb.repository.UserRepository;
@@ -31,12 +31,12 @@ public class LoginService implements ILoginService {
 
     @Override
     public List<UserDTO> getAllUser() {
-        List<Users> listUser = userRepository.findAll();
+        List<User> listUser = userRepository.findAll();
         List<UserDTO> userDTOList = new ArrayList<>();
-        for (Users users : listUser) {
+        for (User users : listUser) {
             UserDTO userDTO = new UserDTO();
             userDTO.setId(users.getId());
-            userDTO.setUserName(users.getUserName());
+            userDTO.setUserName(users.getUsername());
             userDTO.setFullName(users.getFullName());
             userDTOList.add(userDTO);
         }
@@ -45,7 +45,7 @@ public class LoginService implements ILoginService {
 
     @Override
     public boolean checkLogin(String username, String password) {
-        Users user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username);
         return passwordEncoder.matches(password, user.getPassword());
     }
 
@@ -54,7 +54,7 @@ public class LoginService implements ILoginService {
         Optional<Role> roleByRoleName = roleRepository.findRoleByRoleName(signUpRequest.getRoleName());
         Role role = roleByRoleName.get();
 
-        Users user = new Users();
+        User user = new User();
         user.setFullName(signUpRequest.getFullName());
         user.setUserName(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
@@ -69,12 +69,11 @@ public class LoginService implements ILoginService {
 
     @Override
     public UserDTO getUserByUserName(String userName) {
-        Users user = this.userRepository.findByUserName(userName);
+        User user = this.userRepository.findByUserName(userName);
         if (user != null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setId(user.getId());
-            userDTO.setUserName(user.getUserName());
-            userDTO.setPassword(user.getPassword());
+            userDTO.setUserName(user.getUsername());
             userDTO.setFullName(user.getFullName());
             userDTO.setRoles(ObjectUtil.copyProperties(user.getRoles(), new RoleDTO(), RoleDTO.class, true));
             return userDTO;

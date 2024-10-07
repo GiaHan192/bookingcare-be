@@ -1,15 +1,13 @@
 package com.company.myweb.security;
 
-import com.company.myweb.entity.Users;
+import com.company.myweb.entity.User;
 import com.company.myweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
@@ -19,11 +17,11 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Users users = userRepository.findByUserName(username);
-        if (users == null){
+        User users = userRepository.findByUserName(username);
+        if (users == null) {
             throw new UsernameNotFoundException("User can't exist");
         }
 
-        return new User(username,users.getPassword(),new ArrayList<>());
+        return users;
     }
 }

@@ -9,7 +9,6 @@ import java.util.Date;
 public class UserDTO {
     private int id;
     private String userName;
-    private String password;
     private String fullName;
     private Date createDate;
     private RoleDTO roles;
