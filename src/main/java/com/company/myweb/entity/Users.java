@@ -3,11 +3,13 @@ package com.company.myweb.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
 @Entity(name = "users")
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

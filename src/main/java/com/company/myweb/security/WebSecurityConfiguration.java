@@ -3,6 +3,7 @@ package com.company.myweb.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class CustomFilterSecurity {
+public class WebSecurityConfiguration {
     @Autowired
     CustomUserDetailService customUserDetailService;
     @Autowired
@@ -35,10 +36,13 @@ public class CustomFilterSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(registry -> {
+            // Ignore all request in EscapeUrlConfig
             List<EscapeUrlConfig.EscapeUrl> escapeUrls = EscapeUrlConfig.getEscapeUrls();
             for (EscapeUrlConfig.EscapeUrl escapeUrl : escapeUrls) {
-                registry.requestMatchers(escapeUrl.getUrl()).permitAll();
+                registry.requestMatchers(escapeUrl.getMethod(), escapeUrl.getUrl()).permitAll();
             }
+            // Others URL will be authenticated
+            registry.anyRequest().authenticated();
         }).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
         ).addFilterBefore(customerJwtFilter, UsernamePasswordAuthenticationFilter.class).cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration configuration = new CorsConfiguration();

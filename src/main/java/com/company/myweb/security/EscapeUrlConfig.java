@@ -1,6 +1,7 @@
 package com.company.myweb.security;
 
 import lombok.Getter;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.ArrayList;
@@ -11,20 +12,21 @@ public class EscapeUrlConfig {
     private static final List<EscapeUrl> escapeUrls = new ArrayList<>();
 
     static {
-        escapeUrls.add(new EscapeUrl("/auth/signin", "POST"));
-        escapeUrls.add(new EscapeUrl("/auth/signup", "POST"));
-        escapeUrls.add(new EscapeUrl("api-docs/swagger-config", "GET"));
-        escapeUrls.add(new EscapeUrl("/swagger-ui/**", "GET"));
-        escapeUrls.add(new EscapeUrl("api-docs", "GET"));
-        escapeUrls.add(new EscapeUrl("/v3/api-docs/**", "GET"));
+        escapeUrls.add(new EscapeUrl("/auth/signin", HttpMethod.POST));
+        escapeUrls.add(new EscapeUrl("/api/posts/**", HttpMethod.GET));
+        escapeUrls.add(new EscapeUrl("/auth/signup", HttpMethod.POST));
+        escapeUrls.add(new EscapeUrl("api-docs/swagger-config", HttpMethod.GET));
+        escapeUrls.add(new EscapeUrl("/swagger-ui/**", HttpMethod.GET));
+        escapeUrls.add(new EscapeUrl("api-docs", HttpMethod.GET));
+        escapeUrls.add(new EscapeUrl("/v3/api-docs/**", HttpMethod.GET));
     }
 
     @Getter
     public static class EscapeUrl {
         private final String url;
-        private final String method;
+        private final HttpMethod method;
 
-        public EscapeUrl(String url, String method) {
+        public EscapeUrl(String url, HttpMethod method) {
             this.url = url;
             this.method = method;
         }
@@ -36,6 +38,6 @@ public class EscapeUrlConfig {
      */
     public static boolean shouldBypassAuthentication(AntPathMatcher pathMatcher, String requestUri, String requestMethod) {
         return EscapeUrlConfig.getEscapeUrls().stream()
-                .anyMatch(escapeUrl -> pathMatcher.match(escapeUrl.getUrl(), requestUri) && escapeUrl.getMethod().equalsIgnoreCase(requestMethod));
+                .anyMatch(escapeUrl -> pathMatcher.match(escapeUrl.getUrl(), requestUri) && escapeUrl.getMethod().name().equalsIgnoreCase(requestMethod));
     }
 }
