@@ -1,31 +1,46 @@
 package com.company.myweb.service;
 
 import com.company.myweb.dto.QuestionDTO;
-import com.company.myweb.entity.Question;
+import com.company.myweb.payload.request.AddTestRequest;
 import com.company.myweb.repository.QuestionRepository;
 import com.company.myweb.service.interfaces.IQuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class QuestionService implements IQuestionService {
 
-    @Autowired
-    private QuestionRepository questionRepository;
+    private final QuestionRepository questionRepository;
+    private final ObjectMapper objectMapper;
+    private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
+
+    public QuestionService(QuestionRepository questionRepository, ObjectMapper objectMapper) {
+        this.questionRepository = questionRepository;
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public List<QuestionDTO> getAll() {
-        List<Question> questions = questionRepository.findAll();
-        List<QuestionDTO> responses = new ArrayList<>();
-        for (Question question : questions) {
-            List<String> options = List.of(question.getOptions().split(","));
-            List<String> answers = List.of(question.getAnswers().split(","));
+        return List.of();
+    }
 
-            responses.add(new QuestionDTO(question.getId(), question.getQuestionTitle(), options, answers));
+    @Override
+    public Boolean importTest(MultipartFile testFile) {
+        if (testFile.isEmpty()) {
+            return false;
         }
-        return responses;
+        try {
+            AddTestRequest addTestRequest = objectMapper.readValue(testFile.getInputStream(), AddTestRequest.class);
+            return true;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return false;  // Return false if an error occurs
+        }
     }
 }
