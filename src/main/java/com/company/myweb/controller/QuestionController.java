@@ -1,24 +1,39 @@
 package com.company.myweb.controller;
 
 import com.company.myweb.dto.QuestionDTO;
+import com.company.myweb.entity.common.ApiResponse;
 import com.company.myweb.service.interfaces.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/questions")
 public class QuestionController {
-    @Autowired
-    private IQuestionService questionServiceImp;
+    private final IQuestionService questionServiceImp;
+
+    public QuestionController(IQuestionService questionServiceImp) {
+        this.questionServiceImp = questionServiceImp;
+    }
 
     @GetMapping("")
-    public ResponseEntity<List<QuestionDTO>> getAllQuestions(){
+    public ResponseEntity<List<QuestionDTO>> getAllQuestions() {
         List<QuestionDTO> questions = questionServiceImp.getAll();
         return ResponseEntity.ok(questions);
     }
 
+    @PostMapping("/import")
+    public ResponseEntity<ApiResponse<String>> importQuestionTest(@ModelAttribute MultipartFile file) {
+
+        Boolean importResult = questionServiceImp.importTest(file);
+        if (importResult) {
+            return ResponseEntity.ok(ApiResponse.success("Thêm bộ câu hỏi thành công "));
+        } else {
+            return ResponseEntity.badRequest().body(ApiResponse.failed("Thêm bộ câu hỏi thẩt bại"));
+        }
+    }
 
 }

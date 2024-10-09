@@ -23,6 +23,6 @@ public class Question {
     private Long id;
     @Column(name = "question_title")
     private String questionTitle;
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answers> answers;
 }

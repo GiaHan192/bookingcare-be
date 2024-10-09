@@ -4,9 +4,9 @@ import com.company.myweb.dto.QuestionDTO;
 import com.company.myweb.entity.Answers;
 import com.company.myweb.entity.Question;
 import com.company.myweb.payload.request.AddQuestionRequest;
-import com.company.myweb.payload.request.AddTestRequest;
 import com.company.myweb.repository.QuestionRepository;
 import com.company.myweb.service.interfaces.IQuestionService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class QuestionService implements IQuestionService {
@@ -42,15 +41,25 @@ public class QuestionService implements IQuestionService {
         }
         try {
             ArrayList<Question> questionList = new ArrayList<>();
-            AddTestRequest addTestRequest = objectMapper.readValue(testFile.getInputStream(), AddTestRequest.class);
-            for (AddQuestionRequest addQuestionRequest : addTestRequest.getQuestions()) {
-                List<Answers> answersList = addQuestionRequest.getAnswers().stream().map(addAnswerRequest ->
-                        Answers.builder()
-                                .answers(addAnswerRequest.getAnswers())
-                                .point(addAnswerRequest.getPoint()).build()
-                ).toList();
-                Question question = Question.builder()
-                        .questionTitle(addQuestionRequest.getQuestionTitle()).answers(answersList).build();
+            TypeReference<List<AddQuestionRequest>> typeRef = new TypeReference<List<AddQuestionRequest>>() {
+            };
+
+            List<AddQuestionRequest> addQuestionRequestList = objectMapper.readValue(testFile.getInputStream(), typeRef);
+            for (AddQuestionRequest addQuestionRequest : addQuestionRequestList) {
+                Question question = new Question();
+                question.setQuestionTitle(addQuestionRequest.getQuestion());
+
+                List<Answers> answersList = new ArrayList<>();
+                List<String> options = addQuestionRequest.getOptions();
+                for (int index = 0; index < options.size(); index++) {
+                    Answers answer = Answers.builder()
+                            .answers(options.get(index))
+                            .point(addQuestionRequest.getAnswers().get(index))
+                            .question(question)
+                            .build();
+                    answersList.add(answer);
+                }
+                question.setAnswers(answersList);
                 questionList.add(question);
             }
             questionRepository.saveAll(questionList);
