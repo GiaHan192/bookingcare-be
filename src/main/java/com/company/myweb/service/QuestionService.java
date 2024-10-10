@@ -1,5 +1,6 @@
 package com.company.myweb.service;
 
+import com.company.myweb.dto.AnswersDTO;
 import com.company.myweb.dto.QuestionDTO;
 import com.company.myweb.entity.Answers;
 import com.company.myweb.entity.Question;
@@ -30,8 +31,22 @@ public class QuestionService implements IQuestionService {
     }
 
     @Override
-    public List<QuestionDTO> getAll() {
-        return List.of();
+    public List<QuestionDTO> getAllQuestions() {
+        List<Question> questionList = questionRepository.findAll();
+        if (!questionList.isEmpty()) {
+            return questionList.stream().map(question -> {
+                QuestionDTO questionDTO = new QuestionDTO();
+                questionDTO.setId(question.getId());
+                questionDTO.setQuestionTitle(question.getQuestionTitle());
+                List<AnswersDTO> answersDTOList = question.getAnswers().stream().map(answers -> {
+                    return new AnswersDTO(answers.getAnswers(), answers.getPoint());
+                }).toList();
+                questionDTO.setAnswers(answersDTOList);
+                return questionDTO;
+            }).toList();
+        } else {
+            return List.of();
+        }
     }
 
     @Override
