@@ -8,4 +8,5 @@ public class AddDoctorRequest {
     private String introduction = "";
     private String major = "";
     private String title = "";
+    private String base64Image = "";
 }

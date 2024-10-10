@@ -15,4 +15,7 @@ public class DoctorDTO {
     private String major = "";
 
     private String title = "";
+
+    private String image = "";
+
 }

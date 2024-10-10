@@ -18,4 +18,7 @@ public class Doctor {
     private String major = "";
     @Column(name = "title")
     private String title = "";
+    @Lob
+    @Column(name = "image", length = 99999)
+    private String image = "";
 }

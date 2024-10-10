@@ -57,6 +57,7 @@ public class DoctorManagementServiceImpl implements IDoctorManagementService {
         doctor.setIntroduction(request.getIntroduction().trim());
         doctor.setMajor(request.getMajor().trim());
         doctor.setTitle(request.getTitle().trim());
+        doctor.setImage(request.getBase64Image());
         doctorRepository.save(doctor);
         return true;
     }
@@ -70,6 +71,7 @@ public class DoctorManagementServiceImpl implements IDoctorManagementService {
         doctor.setIntroduction(request.getIntroduction().trim());
         doctor.setMajor(request.getMajor().trim());
         doctor.setTitle(request.getTitle().trim());
+        doctor.setImage(request.getBase64Image());
 
         doctorRepository.save(doctor);
         return true;
@@ -95,6 +97,7 @@ public class DoctorManagementServiceImpl implements IDoctorManagementService {
         dto.setIntroduction(doctor.getIntroduction());
         dto.setMajor(doctor.getMajor());
         dto.setTitle(doctor.getTitle());
+        dto.setImage(doctor.getImage());
         return dto;
     }
 }
