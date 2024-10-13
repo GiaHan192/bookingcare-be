@@ -2,6 +2,7 @@ package com.company.myweb.controller;
 
 import com.company.myweb.dto.QuestionDTO;
 import com.company.myweb.entity.common.ApiResponse;
+import com.company.myweb.payload.request.SubmitTestRequest;
 import com.company.myweb.service.interfaces.IQuestionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,5 +35,16 @@ public class QuestionController {
             return ResponseEntity.badRequest().body(ApiResponse.failed("Thêm bộ câu hỏi thẩt bại"));
         }
     }
+
+    @PostMapping("/submit")
+    public ResponseEntity<ApiResponse<String>> submitTest(@RequestBody SubmitTestRequest submitTestRequest) {
+        Boolean result = questionServiceImp.submitTest(submitTestRequest);
+        if (result) {
+            return ResponseEntity.ok(ApiResponse.success("Nộp bài kiểm tra thành công"));
+        } else {
+            return ResponseEntity.badRequest().body(ApiResponse.failed("Nộp bài kiểm tra thất bại"));
+        }
+    }
+
 
 }

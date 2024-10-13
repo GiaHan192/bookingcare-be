@@ -4,19 +4,26 @@ import com.company.myweb.dto.AnswersDTO;
 import com.company.myweb.dto.QuestionDTO;
 import com.company.myweb.entity.Answers;
 import com.company.myweb.entity.Question;
+import com.company.myweb.entity.SubmitAnswer;
+import com.company.myweb.entity.Submition;
+import com.company.myweb.entity.common.ApiException;
 import com.company.myweb.payload.request.AddQuestionRequest;
+import com.company.myweb.payload.request.SubmitTestRequest;
 import com.company.myweb.repository.QuestionRepository;
+import com.company.myweb.repository.SubmitRepository;
 import com.company.myweb.service.interfaces.IQuestionService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService implements IQuestionService {
@@ -24,10 +31,12 @@ public class QuestionService implements IQuestionService {
     private final QuestionRepository questionRepository;
     private final ObjectMapper objectMapper;
     private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
+    private final SubmitRepository submitRepository;
 
-    public QuestionService(QuestionRepository questionRepository, ObjectMapper objectMapper) {
+    public QuestionService(QuestionRepository questionRepository, ObjectMapper objectMapper, SubmitRepository submitRepository) {
         this.questionRepository = questionRepository;
         this.objectMapper = objectMapper;
+        this.submitRepository = submitRepository;
     }
 
     @Override
@@ -83,5 +92,46 @@ public class QuestionService implements IQuestionService {
             log.error(e.getMessage());
             return false;  // Return false if an error occurs
         }
+    }
+
+    @Override
+    public Boolean submitTest(SubmitTestRequest submitTestRequest) {
+        try {
+            List<SubmitTestRequest.SubmitQuestion> content = submitTestRequest.getContent();
+            boolean isContentEmpty = content.isEmpty();
+            if (isContentEmpty) {
+                throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Không thể để trống nội dung kiểm tra");
+            }
+
+            // Storing to Repository
+            List<Long> questionIds = content.stream().map(SubmitTestRequest.SubmitQuestion::getQuestionId).toList();
+
+            Map<Long, Question> allQuestionAsMap = questionRepository
+                    .findAllById(questionIds).stream()
+                    .collect(Collectors.toMap(Question::getId, Function.identity()));
+            if (allQuestionAsMap.keySet().size() != questionIds.size()) {
+                throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Câu hỏi không hợp lệ với hệ thống");
+            }
+
+            Submition submition = new Submition();
+            submition.setFullName(submitTestRequest.getFullName());
+            submition.setEmail(submitTestRequest.getEmail());
+
+            for (SubmitTestRequest.SubmitQuestion submitQuestion : content) {
+                Question question = allQuestionAsMap.get(submitQuestion.getQuestionId());
+                Optional<Answers> submitAnswerOptional = question.getAnswers().stream()
+                        .filter(answers -> Objects.equals(answers.getId(), submitQuestion.getAnswerId())).findFirst();
+                if (submitAnswerOptional.isEmpty()) {
+                    throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Câu trả lời không tồn tại");
+                }
+                submition.getSubmitAnswers().add(new SubmitAnswer(submitAnswerOptional.get(), submition));
+            }
+
+            submitRepository.save(submition);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
+        return true;
     }
 }
