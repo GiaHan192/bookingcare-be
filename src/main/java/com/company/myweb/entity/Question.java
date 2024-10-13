@@ -25,4 +25,6 @@ public class Question {
     private String questionTitle;
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answers> answers;
+    @Column(name = "is_using")
+    private Boolean using = true;
 }

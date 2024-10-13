@@ -41,7 +41,7 @@ public class QuestionService implements IQuestionService {
 
     @Override
     public List<QuestionDTO> getAllQuestions() {
-        List<Question> questionList = questionRepository.findAll();
+        List<Question> questionList = questionRepository.findAllByUsing(true);
         if (!questionList.isEmpty()) {
             return questionList.stream().map(question -> {
                 QuestionDTO questionDTO = new QuestionDTO();
@@ -64,6 +64,11 @@ public class QuestionService implements IQuestionService {
             return false;
         }
         try {
+            List<Question> currentQuestions = questionRepository.findAllByUsing(true);
+            for (Question question : currentQuestions) {
+                question.setUsing(false);
+            }
+
             ArrayList<Question> questionList = new ArrayList<>();
             TypeReference<List<AddQuestionRequest>> typeRef = new TypeReference<List<AddQuestionRequest>>() {
             };
@@ -87,6 +92,7 @@ public class QuestionService implements IQuestionService {
                 questionList.add(question);
             }
             questionRepository.saveAll(questionList);
+            questionRepository.saveAll(currentQuestions);
             return true;
         } catch (IOException e) {
             log.error(e.getMessage());

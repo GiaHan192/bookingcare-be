@@ -2,6 +2,7 @@ package com.company.myweb.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ public class Submition {
     @Column(name = "email")
     private String email;
     @Column(name = "test_date")
+    @CreatedDate
     private Date testDate;
     @OneToMany(mappedBy = "submition", cascade = CascadeType.ALL)
     private List<SubmitAnswer> submitAnswers = new ArrayList<>();
