@@ -3,12 +3,13 @@ package com.company.myweb.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
-@Entity
-@Table(name = "booking")
+
 @Data
-public class Booking {
+@Entity
+@Table(name = "booking_price")
+public class BookingPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,15 +17,8 @@ public class Booking {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    @ManyToOne
     @JoinColumn(name = "booking_time_id")
     private BookingTime bookingTime;
-    @Column(name = "booking_date")
-    private Date bookingDate;
-    @Column(name = "address")
-    private String address;
-    @Column(name = "reason")
-    private String reason;
+    @Column(name = "price")
+    private BigDecimal price;
 }

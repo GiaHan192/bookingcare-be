@@ -2,6 +2,7 @@ package com.company.myweb.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,6 +44,22 @@ public class User implements UserDetails {
 
     @Column(name = "is_activate")
     private boolean isActivate;
+
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private GENDER gender = GENDER.OTHER;
+
+    @Getter
+    public enum GENDER {
+        MALE("Name"), FEMALE("Nữ"), OTHER("Khác");
+
+        private final String name;
+
+        GENDER(String name) {
+            this.name = name;
+        }
+
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -3,6 +3,9 @@ package com.company.myweb.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "doctors")
 @Data
@@ -21,4 +24,8 @@ public class Doctor {
     @Lob
     @Column(name = "image", length = 99999)
     private String image = "";
+    @OneToMany(mappedBy = "doctor")
+    private List<BookingPrice> bookingPrice = new ArrayList<>();
+    @OneToMany(mappedBy = "doctor")
+    private List<Booking> bookings = new ArrayList<>();
 }
