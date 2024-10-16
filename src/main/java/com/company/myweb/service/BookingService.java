@@ -56,7 +56,7 @@ public class BookingService implements IBookingService {
                         .withMessage("Không tìm lịch khám:" + bookAppointmentRequest.getBookingTimeId()));
 
         List<Booking> bookingsWithDateAndDoctor =
-                bookingRepository.findAllByDateAndDoctor_Id(bookAppointmentRequest.getBookingDate(), doctor.getId());
+                bookingRepository.findAllByBookingDateAndDoctor_Id(bookAppointmentRequest.getBookingDate(), doctor.getId());
 
         // TODO: Check is duplicate calendar or not
 
@@ -83,7 +83,7 @@ public class BookingService implements IBookingService {
     @Override
     public DoctorBookingDTO getDoctorBooking(Long doctorId, Date bookingDate) {
         List<Booking> bookingsWithDateAndDoctor =
-                bookingRepository.findAllByDateAndDoctor_Id(bookingDate, doctorId);
+                bookingRepository.findAllByBookingDateAndDoctor_Id(bookingDate, doctorId);
 
         Map<Long, BookingTime> doctorBookingWithBookingKey = bookingsWithDateAndDoctor.
                 stream()
