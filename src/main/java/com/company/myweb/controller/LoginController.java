@@ -41,7 +41,6 @@ public class LoginController {
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<String>> signup(@RequestBody SignUpRequest signUpRequest) {
-        ResponseData responseData = new ResponseData();
         boolean result = loginServiceImp.addUser(signUpRequest);
         if (result) {
             return ResponseEntity.ok(ApiResponse.success("Tạo tài khoản thành công"));

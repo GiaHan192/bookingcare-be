@@ -8,6 +8,7 @@ import com.company.myweb.service.interfaces.IBookingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.Date;
 
 @RestController
@@ -22,14 +23,18 @@ public class BookingController {
 
 
     @PostMapping
-    public ResponseEntity<?> booking(@RequestBody BookAppointmentRequest bookAppointmentRequest){
-        bookingService.bookAppointment(bookAppointmentRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ApiResponse<String>> booking(@RequestBody BookAppointmentRequest bookAppointmentRequest){
+        Boolean bookingResult = bookingService.bookAppointment(bookAppointmentRequest);
+        if(bookingResult){
+            return ResponseEntity.ok(ApiResponse.success("Đặt lịch thành công"));
+        }else{
+            return ResponseEntity.badRequest().body(ApiResponse.failed("Đặt lịch thất bại"));
+        }
     }
     @GetMapping("/doctor")
     public ResponseEntity<ApiResponse<DoctorBookingDTO>> getBookingOfDoctor(@RequestParam Long doctorId,
-                                                                            @RequestParam Date bookingDate) {
-        return ResponseEntity.ok(ApiResponse.success(bookingService.getDoctorBooking(doctorId, bookingDate)));
+                                                                            @RequestParam Instant bookingDate) {
+        return ResponseEntity.ok(ApiResponse.success(bookingService.getDoctorBooking(doctorId, Date.from(bookingDate))));
     }
 
 }
